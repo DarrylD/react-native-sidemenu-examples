@@ -3,6 +3,8 @@
 
 Wanted to experiment with animations on android.
 
+<img src="https://raw.githubusercontent.com/DarrylD/react-native-sidemenu-shrink/master/animation.gif" width="275" height="auto" alt="Buttons">
+
 
 ## Setup
 
