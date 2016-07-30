@@ -1,0 +1,14 @@
+{
+  "name": "NativeSidemenu",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "start": "react-native run-android",
+    "android": "adb reverse tcp:8081 tcp:8081 && npm start",
+    "manager": "node node_modules/react-native/local-cli/cli.js start"
+  },
+  "dependencies": {
+    "react": "15.2.1",
+    "react-native": "0.30.0"
+  }
+}
