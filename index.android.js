@@ -11,6 +11,7 @@ import {
     StyleSheet,
     Text,
     View,
+    ScrollView,
     LayoutAnimation,
     UIManager,
     Platform,
@@ -31,11 +32,25 @@ class NativeSidemenu extends Component {
         this.state = {
             active:false,
             fadeAnim: new Animated.Value(0),
+            shrink: new Animated.Value(0),
         }
+
+        this.setAnimation();
     }
 
     componentWillUpdate() {
         LayoutAnimation.easeInEaseOut();
+
+        this.setAnimation();
+    }
+
+    setAnimation(){
+        Animated.spring(this.state.shrink, {
+            toValue: -.2,  // Returns to the start
+            velocity: 3,   // Velocity makes it move
+            tension: -4,   // Slow
+            friction: 4,   // Oscillate a lot
+        }).start();
     }
 
     handleActivateMenu(){
@@ -57,10 +72,6 @@ class NativeSidemenu extends Component {
 
     render() {
 
-        const activeCss = this.state.active
-            ? styles.containterActive
-            : null
-
         const menuState = this.state.active
             ? styles.menuActive
             : styles.menu
@@ -76,6 +87,38 @@ class NativeSidemenu extends Component {
 
         const last = links.length - 1
 
+        const animatedInStyles = {
+            transform: [
+                {
+                    scale: this.state.shrink.interpolate({
+                        inputRange: [0, 1],
+                        outputRange: [1, 2],
+                    })
+                },
+            ],
+            flex: 5,
+            right: -180,
+            borderRadius: 4,
+        }
+
+        const animatedOutStyles = {
+            transform: [
+                {
+                    scale: this.state.shrink.interpolate({
+                        inputRange: [0, 1],
+                        outputRange: [1.5, 4],
+                    })
+                },
+            ],
+            flex: 1,
+            right: 0,
+            borderRadius: 4,
+        }
+
+        const activeMenu = this.state.active
+            ? animatedInStyles
+            : animatedOutStyles
+
         return (
             <View style={styles.outer}>
 
@@ -89,16 +132,19 @@ class NativeSidemenu extends Component {
                     </Animated.View>
                 </View>
 
-                <View style={[styles.container, activeCss]} >
-                    <Text style={styles.welcome} onPress={()=> this.setState({active:!this.state.active})} >
-                        Side Menu Example
-                    </Text>
+                <Animated.View style={[styles.outer, activeMenu]}>
+                    <View style={[styles.container]} >
+                        <Text style={styles.welcome} onPress={()=> this.setState({active:!this.state.active})} >
+                            Side Menu Example
+                        </Text>
 
-                    <TouchableOpacity style={styles.btn} onPress={()=> this.handleActivateMenu()}>
-                        <Text style={{color:'white'}}>Show Menu</Text>
-                    </TouchableOpacity>
+                        <TouchableOpacity style={styles.btn} onPress={()=> this.handleActivateMenu()}>
+                            <Text style={{color:'white'}}>Show Menu</Text>
+                        </TouchableOpacity>
 
-                </View>
+                    </View>
+                </Animated.View>
+
             </View>
         );
     }
@@ -147,14 +193,6 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         backgroundColor: '#ddd',
-    },
-    containterActive:{
-        flex: 5,
-        right: -180,
-        borderRadius: 4,
-        transform: [ //TODO figure out why this isnt animating...
-            {scale: .8}
-        ],
     },
     welcome: {
         fontSize: 20,
