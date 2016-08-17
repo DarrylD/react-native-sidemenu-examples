@@ -16,11 +16,19 @@ import {
     UIManager,
     Platform,
     TouchableOpacity,
-    Animated
+    Animated,
+    Dimensions
 } from 'react-native';
 
+import Slidemenu from './components/Slidemenu';
 import Sidemenu from './components/Sidemenu';
 import Fabmenu from './components/Fabmenu';
+
+import { Button } from 'carbon-native';
+
+const {height, width} = Dimensions.get('window');
+
+
 
 // need this to have LayoutAnimation work on android
 if (Platform.OS === 'android') {
@@ -34,7 +42,8 @@ class App extends Component {
         super()
 
         this.state = {
-            open:false
+            open:false,
+            currentMenu: 'slide'
         }
     }
 
@@ -42,27 +51,72 @@ class App extends Component {
         this.setState({open: selection || !this.state.open})
     }
 
+    handleChangeMenu(currentMenu){
+        this.setState({currentMenu})
+    }
+
     afterAnimation(){
         console.log('animated')
     }
 
+    renderDemoText(){
+        return (
+            <Text style={styles.welcome}>
+                Side Menu Example
+            </Text>
+        )
+    }
+
+    renderDemoButton(){
+        return (
+            <TouchableOpacity style={styles.btn} onPress={()=> this.handleToggleMenu()}>
+                <Text style={{color:'white'}}>Show Menu</Text>
+            </TouchableOpacity>
+        )
+    }
+
+
     render() {
 
-        return (
-            <Fabmenu active={this.state.open} afterAnimation={()=> this.afterAnimation()} handleToggleMenu={()=>this.handleToggleMenu()}>
+        if(this.state.currentMenu === 'fab') {
+            return (
+                <Fabmenu active={this.state.open} afterAnimation={()=> this.afterAnimation()} handleChangeMenu={(d)=> this.handleChangeMenu(d)} handleToggleMenu={()=>this.handleToggleMenu()}>
+                    <View style={[styles.container]}>
+                        {this.renderDemoText()}
+                        {this.renderDemoButton()}
+                    </View>
+                </Fabmenu>
+            );
+        }
 
-                <View style={styles.container}>
-                    <Text style={styles.welcome}>
-                        Side Menu Example
-                    </Text>
+        if(this.state.currentMenu === 'side') {
+            return (
+                <Sidemenu active={this.state.open} afterAnimation={()=> this.afterAnimation()} handleChangeMenu={(d)=> this.handleChangeMenu(d)} handleToggleMenu={()=>this.handleToggleMenu()}>
+                    <View style={[styles.container]}>
+                        {this.renderDemoText()}
+                        {this.renderDemoButton()}
+                    </View>
+                </Sidemenu>
+            );
+        }
 
-                    <TouchableOpacity style={styles.btn} onPress={()=> this.handleToggleMenu()}>
-                        <Text style={{color:'white'}}>Show Menu</Text>
-                    </TouchableOpacity>
-                </View>
+        if(this.state.currentMenu === 'slide') {
+            return (
+                <Slidemenu active={this.state.open} afterAnimation={()=> this.afterAnimation()} handleChangeMenu={(d)=> this.handleChangeMenu(d)} handleToggleMenu={()=>this.handleToggleMenu()}>
+                    <View style={[styles.container, { borderRadius: 20 }]}>
+                        <Button
+                            color="primary"
+                            text="Outline Button"
+                            outline
+                            />
+                        {this.renderDemoText()}
+                        {this.renderDemoButton()}
+                    </View>
+                </Slidemenu>
+            );
+        }
 
-            </Fabmenu>
-        );
+
     }
 }
 
@@ -87,7 +141,6 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         margin: 10,
     },
-
 });
 
 AppRegistry.registerComponent('NativeSidemenu', () => App);

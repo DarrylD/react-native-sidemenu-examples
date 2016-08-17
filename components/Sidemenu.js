@@ -34,9 +34,9 @@ export default class Sidemenu extends Component {
         this.setAnimation();
 
         this.links = [
-            'Home',
-            'Profile',
-            'Favorites',
+            'fab',
+            'slide',
+            'side',
             'Entries',
             'Search',
             'Logout',
@@ -110,6 +110,12 @@ export default class Sidemenu extends Component {
             .start()
     }
 
+    handleToggleMenu(selectedMenu){
+        //sending state back to parent
+        this.props.handleToggleMenu()
+        this.props.handleChangeMenu(selectedMenu)
+    }
+
     renderMenu(){
 
         const menuState = this.props.active
@@ -122,7 +128,7 @@ export default class Sidemenu extends Component {
             <View style={menuState}>
                 <Animated.View  style={{opacity: this.state.fadeAnim}}>
                     {this.links.map( (name, i) =>
-                        <TouchableOpacity key={name} style={[styles.linkWrapper, i === last ? styles.last : null]} onPress={()=> this.handleActivateMenu()} >
+                        <TouchableOpacity key={name} style={[styles.linkWrapper, i === last ? styles.last : null]} onPress={()=> this.handleToggleMenu(name)} >
                             <Text style={styles.link}>{name}</Text>
                         </TouchableOpacity>
                     )}

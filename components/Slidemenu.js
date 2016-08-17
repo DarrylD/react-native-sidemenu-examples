@@ -29,7 +29,7 @@ const {height, width} = Dimensions.get('window');
 
 const ITEMS_PER_ROW = 3
 
-export default class Fabmenu extends Component {
+export default class Slidemenu extends Component {
 
     constructor(props){
         super(props)
@@ -69,7 +69,7 @@ export default class Fabmenu extends Component {
     handleToggleMenu(selectedMenu){
         //sending state back to parent
         this.props.handleToggleMenu()
-        if(selectedMenu) this.props.handleChangeMenu(selectedMenu)
+        this.props.handleChangeMenu(selectedMenu)
     }
 
     handleMoveCardStart(){
@@ -126,7 +126,7 @@ export default class Fabmenu extends Component {
         const menuStateStyles = {
             position:'absolute',
             opacity: this.state.menuAnimation,
-            bottom: 80,
+            bottom: 20,
             left: 20,
             width: width - 40
         }
@@ -155,10 +155,6 @@ export default class Fabmenu extends Component {
                     {this.props.children}
                 </Animated.View>
 
-                <View style={styles.btn}>
-                    <TouchableOpacity style={{width:50, height:50}} onPress={()=> this.handleToggleMenu() } />
-                </View>
-
             </View>
         );
     }
@@ -170,14 +166,13 @@ const styles = StyleSheet.create({
     outer: {
         backgroundColor: '#F6F6F6',
         flex: 1,
-        padding:20,
         justifyContent: 'center',
         alignItems: 'center',
     },
     inner:{
         flex: 1,
         elevation: 2,
-        width: width-40, //setting the width of our main card
+        width: width, //setting the width of our main card
     },
     btn: {
         padding: 12,
@@ -201,15 +196,15 @@ const styles = StyleSheet.create({
     linkBlock:{
         flex:1,
         padding:10,
-        borderWidth: 1,
-        borderColor: '#ccc',
         borderRadius: 4,
         margin:5,
         alignItems: 'center',
+        backgroundColor: '#5eba7d'
     },
     link:{
         fontSize:14,
         justifyContent: 'center',
+        color: 'white'
     }
 
 });
